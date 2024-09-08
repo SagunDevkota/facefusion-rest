@@ -255,6 +255,7 @@ def pre_check() -> bool:
 
 def conditional_process() -> None:
 	start_time = time()
+	result = None
 	for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 		while not frame_processor_module.post_check():
 			logger.disable()
@@ -264,10 +265,10 @@ def conditional_process() -> None:
 			return
 	conditional_append_reference_faces()
 	if is_image(facefusion.globals.target_path):
-		process_image(start_time)
+		result = process_image(start_time)
 	if is_video(facefusion.globals.target_path):
-		process_video(start_time)
-
+		result = process_video(start_time)
+	return result
 
 def conditional_append_reference_faces() -> None:
 	if 'reference' in facefusion.globals.face_selector_mode and not get_reference_faces():
@@ -350,6 +351,7 @@ def process_image(start_time : float) -> None:
 	else:
 		logger.error(wording.get('processing_image_failed'), __name__.upper())
 	process_manager.end()
+	return normed_output_path
 
 
 def process_video(start_time : float) -> None:
