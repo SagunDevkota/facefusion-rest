@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 UPLOAD_DIRECTORY = "outputs/"
 
-@app.route("/swap-face")
+@app.route("/swap-face",methods=['post'])
 def swap_face():
     files = request.files
     source = files.get('file_source',None)
@@ -32,7 +32,6 @@ def swap_face():
 @app.route('/outputs/<filename>')
 def serve_file(filename):
     file_path = os.path.join(UPLOAD_DIRECTORY, filename)
-    print(os.path.isfile(file_path))
     if not os.path.isfile(file_path):
         abort(404)
     return send_from_directory(UPLOAD_DIRECTORY, filename)
